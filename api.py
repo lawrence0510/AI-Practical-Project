@@ -6,8 +6,10 @@ from moviepy.editor import *
 from pydub import AudioSegment
 import os
 from gtts import gTTS
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 api = Api(app, title="人工智慧實務專題api", description="組員：吳堃豪、許馨文")
 
 # Initialize Google Translator
@@ -124,6 +126,5 @@ class MergeVideoAudio(Resource):
 
         return send_file(output_path, as_attachment=True)
 
-# 啟動 Flask 應用程式
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5003, debug=True)
