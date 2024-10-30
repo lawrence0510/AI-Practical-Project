@@ -1,0 +1,29 @@
+{
+    "videos": [
+      {
+        "Web": "1",
+        "Name": "Inside the Mind of a Master Procrastinator | Tim Urban | TED",
+        "image": "/assets/1.jpg"
+      },
+      {
+        "Web": "2",
+        "Name": "How to Speak So That People Want to Listen | Julian Treasure | TED",
+        "image": "/assets/2.jpg"
+      },
+      {
+        "Web": "3",
+        "Name": "The next outbreak? We're not ready | Bill Gates | TED",
+        "image": "/assets/3.jpg"
+      },
+      {
+        "Web": "4",
+        "Name": "Tom Thum: The orchestra in my mouth | TED",
+        "image": "/assets/4.jpg"
+      },
+      {
+        "Web": "5",
+        "Name": "Elon Musk: The future we're building -- and boring | TED",
+        "image": "/assets/5.jpg"
+      }
+    ]
+  }

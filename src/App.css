@@ -1,0 +1,302 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #eaf4fc;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.step {
+  display: flex;
+  align-items: center; /*垂直方向上置中對齊 */
+  justify-content: center;
+  background-color: lightgray; /* 設定背景色為灰色 */
+  padding: 10px; /* 設定內邊距，上下左右都有 10px */
+  height: 111px;
+  font-size: 30px;
+  color: rgba(0, 0, 0, 0.21);
+}
+
+.step1 {
+  margin-right: 80px;
+}
+
+.step2 {
+  margin-left: 80px;
+  margin-right: 80px;
+}
+
+.step3 {
+  margin-left: 80px;
+}
+
+.Topic {
+  margin-top: 50px;
+  font-weight: bolder;
+  font-size: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 4px 3px 0px #fff, 9px 8px 0px rgba(0,0,0,0.15);
+}
+
+.input {
+  height: 80px;
+  width: 45%;
+  margin: 50px 0px;
+  border: 1px solid gray;
+  display: flex;
+  align-items: center; /*垂直方向上置中對齊 */
+  justify-content: center;
+  border-radius: 15px;
+  background-color: white;
+}
+
+.i {
+  display: flex;
+  align-items: center; /*垂直方向上置中對齊 */
+  justify-content: center;
+  position: relative;
+}
+
+.input > input {
+  outline: none;
+  border: none;
+  background: none;
+  color: white;
+  width: 100%;
+  height: 100%;
+  padding-left: 30px;
+  font-size: 20px;
+  color: black;
+}
+
+.input > button {
+  border: none;
+  background-color: rgba(141, 200, 255);
+  color: black;
+  height: 60%;
+  width: 130px;
+  cursor: pointer;
+  margin-right: 60px;
+  margin-left: 40px;
+  font-size: 18px;
+  border-radius: 40px;
+}
+
+.Guess {
+  font-size: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: gray;
+}
+
+.Loading {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  margin-top: -45px;
+  margin-left: 753px;
+}
+
+.App .step1 {
+  font-weight: bold;
+  color: black;
+}
+
+.App2 .step1 {
+  color: rgba(0, 0, 0, 0.21);
+}
+
+.App2 .step2 {
+  font-weight: bold;
+  color: black;
+}
+
+.web {
+  height: 200px;
+  width: 800px;
+  margin-left: 900px;
+  margin-top: 50px;
+  font-size: 33px;
+  font-weight: bold;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 50px;
+  border: solid 0px black;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-decoration: underline;
+}
+
+.VideoPic {
+  width: 400px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  margin-left: 450px;
+  margin-top: -200px;
+  border-radius: 15px;
+  position: absolute;
+}
+
+.input > button:hover {
+  background-color: darkblue;
+  color: white;
+}
+
+.choose {
+  display: flex;
+  align-items: center; /*垂直方向上置中對齊 */
+  justify-content: center;
+  padding: 10px; /* 設定內邊距，上下左右都有 10px */
+  height: 111px;
+  font-size: 30px;
+  margin-top: 60px;
+  color: black;
+}
+
+.trans {
+  margin-right: 80px;
+}
+
+.voice {
+  margin-right: 80px;
+  margin-left: 80px;
+}
+
+.sub {
+  margin-left: 80px;
+}
+
+.App3 .step2 {
+  color: rgba(0, 0, 0, 0.21);
+}
+
+.App3 .step3 {
+  font-weight: bold;
+  color: black;
+}
+
+.next {
+  border: none;
+  background-color: rgb(0, 132, 255);
+  color: black;
+  height: 60px;
+  width: 120px;
+  cursor: pointer;
+  margin-right: 60px;
+  margin-left: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 40px;
+  margin-left: 900px;
+  margin-top: 200px;
+}
+
+.next:hover {
+  background-color: rgb(40, 40, 145);
+  color: white;
+}
+
+.App23 .step_dot2{
+  animation: colorChange 1.2s linear infinite alternate;
+}
+
+/* 定義動畫效果 */
+@keyframes colorChange {
+  0%, 20% {
+    color: rgba(0, 0, 0, 0.21); /* 開始和結束時為灰色 */
+  }
+  50% {
+    color: black; /* 中間變為黑色，停留較長時間 */
+  }
+  80%, 100% {
+    color: rgba(0, 0, 0, 0.21); /* 回到灰色 */
+  }
+}
+
+.Wait{
+  display: flex;
+  align-items: center; /*垂直方向上置中對齊 */
+  justify-content: center;
+  color: black;
+  font-size: 40px;
+  margin-top: 40px;
+  font-weight: bolder;
+  text-shadow: rgb(101, 101, 211) 1px 0 10px;
+}
+
+.ing{
+  font-size: 22px;
+  margin-left: 700px;
+  text-shadow: 1px 1px 2px gray;
+}
+
+.d{
+  margin-top: 100px;
+  margin-bottom: 80px;
+}
+
+.t{
+  margin-bottom: 80px;
+}
+
+.v{
+  margin-bottom: 80px;
+}
+
+
+.progressbar{
+	position: relative;
+	overflow: hidden;
+	width: 350px;
+	height: 35px;
+	border-radius: 5px;
+	background-color: white;
+  margin-left: 200px;
+  margin-top: -30px;
+}
+
+.progressPercent{
+	font-weight: 400;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+	color: rgb(196, 196, 223);
+	text-shadow: -1px 0 #555, 0 1px #555, 1px 0 #555, 0 -1px #555;
+}
+
+.btn{
+	display: block;
+	margin: 5rem auto;
+	border: none;
+	border-radius: 3px;     
+	outline: none;
+	width: 100px;
+	height: 40px;
+	background-color: #937DC2;
+	transition: box-shadow 0.5s;
+	font-size: 16px;
+	font-family:arial;
+	color: #fff;
+	cursor: pointer;
+  margin-top: -36px;
+  margin-right: -5px;
+}
+
+.btn:hover{
+	-webkit-box-shadow: inset 100px 0 0 0 #7c54d1;
+    box-shadow: inset 100px 0 0 0 #7c54d1;
+}
+
+.check{
+  width: 60px;
+  object-fit: cover;
+  position: relative;
+}
