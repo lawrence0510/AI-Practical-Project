@@ -2,6 +2,7 @@ import Step from "./components/step";
 import { useLocation } from "react-router-dom";
 import Choose from "./components/Choose";
 
+
 function App2() {
   const location = useLocation(); // 獲取來自 App 頁面的狀態
   const { videoData } = location.state || {}; // 從狀態中提取 inputValue

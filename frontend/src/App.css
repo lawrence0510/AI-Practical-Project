@@ -162,15 +162,18 @@ body {
 
 .trans {
   margin-right: 80px;
+  margin-top: 40px;
 }
 
 .voice {
   margin-right: 80px;
   margin-left: 80px;
+  margin-top: 111px;
 }
 
 .sub {
   margin-left: 80px;
+  margin-top: -24px;
 }
 
 .App3 .step2 {
@@ -233,32 +236,24 @@ body {
 
 .ing{
   font-size: 22px;
-  margin-left: 700px;
+  margin-left: 630px;
   text-shadow: 1px 1px 2px gray;
 }
 
 .d{
   margin-top: 100px;
-  margin-bottom: 80px;
 }
 
-.t{
-  margin-bottom: 80px;
-}
-
-.v{
-  margin-bottom: 80px;
-}
 
 
 .progressbar{
-	position: relative;
+	position: absolute;
 	overflow: hidden;
 	width: 350px;
 	height: 35px;
 	border-radius: 5px;
 	background-color: white;
-  margin-left: 200px;
+  margin-left: 180px;
   margin-top: -30px;
 }
 
@@ -272,31 +267,28 @@ body {
 	text-shadow: -1px 0 #555, 0 1px #555, 1px 0 #555, 0 -1px #555;
 }
 
-.btn{
-	display: block;
-	margin: 5rem auto;
-	border: none;
-	border-radius: 3px;     
-	outline: none;
-	width: 100px;
-	height: 40px;
-	background-color: #937DC2;
-	transition: box-shadow 0.5s;
-	font-size: 16px;
-	font-family:arial;
-	color: #fff;
-	cursor: pointer;
-  margin-top: -36px;
-  margin-right: -5px;
-}
-
-.btn:hover{
-	-webkit-box-shadow: inset 100px 0 0 0 #7c54d1;
-    box-shadow: inset 100px 0 0 0 #7c54d1;
-}
-
 .check{
   width: 60px;
   object-fit: cover;
-  position: relative;
+  transform: translate(550px, -44px);
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.select_trans{
+  color: #333333;
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+.select_gender{
+  color: #333333;
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+.select_speed{
+  color: #333333;
+  font-size: 20px;
+  margin-top: 30px;
 }
