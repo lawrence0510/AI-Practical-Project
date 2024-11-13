@@ -76,7 +76,7 @@ function App23() {
                   setCheck4Visible(true); // 顯示第四個打勾
                   setTimeout(() => {
                     navigate("/app3"); // 跳轉到 App3 頁面
-                  }, 2000); // 延遲 2 秒
+                  }, 500); 
                 }}
               />
             )}
