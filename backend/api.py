@@ -161,4 +161,4 @@ api.add_namespace(video_audio_ns, path='/video_audio')
 api.add_namespace(text_audio_ns, path='/text_audio')
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5003)
