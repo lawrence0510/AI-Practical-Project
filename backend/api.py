@@ -1,3 +1,4 @@
+#openai整理大綱input:srt, output:String(大綱)
 from flask import Flask, request
 from flask_restx import Api, Resource, Namespace, reqparse
 from flask_cors import CORS
@@ -44,6 +45,11 @@ video_audio_ns = Namespace('video_audio', description="影片與音訊處理功�
 text_audio_ns = Namespace('text_audio', description="文字與語音處理功能")
 
 # YouTube Namespace
+from yt_dlp import YoutubeDL
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 @youtube_ns.route('/download_youtube_video')
 class DownloadYoutubeVideo(Resource):
     @youtube_ns.expect(download_parser)
@@ -52,19 +58,34 @@ class DownloadYoutubeVideo(Resource):
         url = args['url']
 
         try:
-            yt = YouTube(url)
-            caption = yt.captions.get_by_language_code('en')
-            if caption:
-                subtitle = caption.generate_srt_captions()
-                with open(f"{UPLOAD_FOLDER}/subtitle.srt", "w", encoding="utf-8") as f:
-                    f.write(subtitle)
-                video = yt.streams.filter(progressive=True, file_extension='mp4').first()
-                video_path = video.download(UPLOAD_FOLDER)
-                return {"video_path": video_path, "subtitle_path": f"{UPLOAD_FOLDER}/subtitle.srt"}
-            else:
-                video = yt.streams.filter(progressive=True, file_extension='mp4').first()
-                video_path = video.download(UPLOAD_FOLDER)
-                return {"video_path": video_path, "subtitle_path": None}
+            # 設定 yt-dlp 的參數
+            ydl_opts = {
+                'outtmpl': f'{UPLOAD_FOLDER}/%(title)s.%(ext)s',  # 儲存影片的格式
+                'format': 'bestvideo+bestaudio/best',  # 下載最佳畫質與音質
+                'writesubtitles': True,  # 嘗試下載字幕
+                'subtitleslangs': ['en'],  # 指定字幕語言
+                'postprocessors': [
+                    {
+                        'key': 'FFmpegVideoConvertor',
+                        'preferedformat': 'mp4'  # 確保輸出為 mp4
+                    }
+                ]
+            }
+
+            with YoutubeDL(ydl_opts) as ydl:
+                info_dict = ydl.extract_info(url, download=True)  # 下載影片
+                video_path = os.path.join(UPLOAD_FOLDER, f"{info_dict['title']}.mp4")
+                
+                # 檢查是否有字幕文件
+                subtitle_path = None
+                if 'requested_subtitles' in info_dict and info_dict['requested_subtitles']:
+                    subtitle_lang = 'en'
+                    if subtitle_lang in info_dict['requested_subtitles']:
+                        subtitle_filename = info_dict['requested_subtitles'][subtitle_lang]['filename']
+                        subtitle_path = os.path.join(UPLOAD_FOLDER, subtitle_filename)
+
+                return {"video_path": video_path, "subtitle_path": subtitle_path}
+
         except Exception as e:
             return {"error": str(e)}, 500
 
@@ -108,6 +129,8 @@ class CombineVideoAudio(Resource):
             return {"error": str(e)}, 500
 
 # Text and Audio Namespace
+from deep_translator import GoogleTranslator
+
 @text_audio_ns.route('/translate')
 class Translate(Resource):
     @text_audio_ns.expect(translate_parser)
@@ -117,8 +140,7 @@ class Translate(Resource):
         target_language = args['target_language']
 
         try:
-            translator = Translator()
-            translated_text = translator.translate(text, dest=target_language).text
+            translated_text = GoogleTranslator(source='auto', target=target_language).translate(text)
             return {"translated_text": translated_text}
         except Exception as e:
             return {"error": str(e)}, 500
@@ -139,14 +161,26 @@ class TextToSpeech(Resource):
         except Exception as e:
             return {"error": str(e)}, 500
 
+from pydub import AudioSegment
+import os
+import speech_recognition as sr
+
 @text_audio_ns.route('/speech_to_text')
 class SpeechToText(Resource):
     @text_audio_ns.expect(speech_parser)
     def post(self):
         args = speech_parser.parse_args()
         audio_path = args['audio']
-
+        
         try:
+            # 檢查格式並轉換為 WAV（如果需要）
+            if not audio_path.endswith(".wav"):
+                audio = AudioSegment.from_file(audio_path)
+                wav_path = os.path.splitext(audio_path)[0] + ".wav"
+                audio.export(wav_path, format="wav")
+                audio_path = wav_path
+            
+            # 處理音訊
             recognizer = sr.Recognizer()
             with sr.AudioFile(audio_path) as source:
                 audio_data = recognizer.record(source)
