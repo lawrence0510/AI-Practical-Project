@@ -171,7 +171,7 @@ body {
   margin-top: 111px;
 }
 
-.sub {
+.ssub {
   margin-left: 80px;
   margin-top: -24px;
 }
@@ -413,16 +413,30 @@ body {
 
 .play{
   position: relative;
-  left: 200px;
+  left: 260px;
+  top: 3px;
   background-position: center; /* 圖片居中 */
   border: none; /* 移除邊框 */
   cursor: pointer; /* 滑鼠移上時顯示手勢 */
+  background-color: #fff;
+}
+
+.play img {
+  width: 30px;
+  height: 30px;
 }
 
 .download{
   position: relative;
-  left: 220px;
+  left: 280px;
+  top: 5px;
   background-position: center; /* 圖片居中 */
   border: none; /* 移除邊框 */
   cursor: pointer; /* 滑鼠移上時顯示手勢 */
+  background-color: #fff;
+}
+
+.download img {
+  width: 30px;
+  height: 30px;
 }

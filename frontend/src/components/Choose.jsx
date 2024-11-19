@@ -42,7 +42,7 @@ function Choose() {
           | 音檔設定 |<Select options={gender} className="select_gender" />
           <Select options={speed} className="select_speed" />
         </div>
-        <div className="sub">
+        <div className="ssub">
           | 字幕下載 |{" "}
           <button
             className={`toggle-btn ${toggled ? "toggled" : ""}`}
