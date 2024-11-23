@@ -2,16 +2,16 @@ import Step from "./components/step";
 import React from "react";
 
 function App3() {
+  const { url } = location.state || {}; // 確保 state 存在，提取 url
   return (
     <div className="App3">
       <Step />
       <iframe 
         className="Video"
-        src="https://www.youtube.com/embed/zIwLWfaAg-8?si=8q1E60MvONP0MNEs" 
+        src={url}
         title="YouTube video player" 
-        frameborder="0" 
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen
+        allowFullScreen
       ></iframe>
       <p className="page3_name">{"Elon Musk: The future we're building -- and boring | TED"}</p>
       <div className="sb">
