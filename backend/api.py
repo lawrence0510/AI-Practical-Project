@@ -99,6 +99,32 @@ class DownloadYoutubeVideo(Resource):
 
         except Exception as e:
             return {"error": str(e)}, 500
+        
+@youtube_ns.route('/fetch_video_info')
+class FetchVideoInfo(Resource):
+    @youtube_ns.expect(download_parser)
+    def post(self):
+        args = download_parser.parse_args()
+        url = args['url']
+
+        try:
+            # 使用 yt_dlp 提取影片資訊
+            ydl_opts = {
+                'quiet': True,  # 不輸出到控制台
+                'skip_download': True  # 不下載影片，只提取資訊
+            }
+
+            with YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=False)  # 提取資訊
+                title = info.get("title", "無法提取標題")
+                thumbnail_url = info.get("thumbnail", "無法提取縮圖")
+
+            return {
+                "title": title,
+                "thumbnail_url": thumbnail_url
+            }
+        except Exception as e:
+            return {"error": str(e)}, 500
 
 # Video and Audio Namespace
 @video_audio_ns.route('/separate_video_audio')
