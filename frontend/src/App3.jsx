@@ -1,39 +1,60 @@
-import Step from "./components/step";
 import React from "react";
+import { useLocation } from "react-router-dom"; // 使用 useLocation 提取狀態
+import Step from "./components/step";
 
 function App3() {
-  const { url } = location.state || {}; // 確保 state 存在，提取 url
+  const location = useLocation();
+  const savedState = JSON.parse(localStorage.getItem("app3State")) || {};
+  const { videoData } = location.state || savedState || {};
+
+  console.log("App3 的狀態：", location.state);
+
+  // 將普通 YouTube URL 轉換為嵌入 URL
+  const getEmbedUrl = (videoUrl) => {
+    if (!videoUrl) return ""; // 如果 URL 不存在，返回空字串
+    if (videoUrl.includes("embed")) return videoUrl; // 如果已是嵌入格式，直接返回
+    try {
+      const url = new URL(videoUrl);
+      const videoId = url.searchParams.get("v"); // 提取 video_id
+      return `https://www.youtube.com/embed/${videoId}`;
+    } catch (error) {
+      console.error("無法解析 URL:", error);
+      return ""; // 如果解析失敗，返回空字串
+    }
+  };
+
+  const embedUrl = getEmbedUrl(videoData?.url); // 轉換 URL
+
+  if (!embedUrl) {
+    return (
+      <div>
+        <p>無法嵌入視頻，請檢查影片 URL。</p>
+      </div>
+    );
+  }
+
   return (
     <div className="App3">
       <Step />
       <iframe 
         className="Video"
-        src={url}
+        src={embedUrl} // 使用嵌入格式的 URL
         title="YouTube video player" 
+        frameBorder="0" 
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
         allowFullScreen
       ></iframe>
-      <p className="page3_name">{"Elon Musk: The future we're building -- and boring | TED"}</p>
+      <p className="page3_name">{videoData?.name || "無影片標題"}</p> {/* 使用 videoData.name */}
       <div className="sb">
         <div className="top">
-            <span className="sub1">字幕列表</span>
-            <span className="sub_sp">x0.5</span>
-            <span className="sub_voice">女聲</span>
-            <button className="play"><img src="/assets/play.png" alt="按鈕圖片" /></button>
-            <button className="download"><img src="/assets/download.png" alt="按鈕圖片" /></button>
+          <button className="play">
+            <img src="/assets/play.png" alt="按鈕圖片" />
+          </button>
+          <button className="download">
+            <img src="/assets/download.png" alt="按鈕圖片" />
+          </button>
         </div>
-        <div className="sub">
-        克里斯·安德森（安）：伊隆，歡迎再次參加 TED。真的很榮幸你能來。<br /><br />
-        伊隆·馬斯克（馬）：多謝邀請。<br /><br />
-        安：接下來的半個多小時，我們要花點時間探索你的願景，未來怎樣令人興奮。我想問的第一個問題會有點反諷。你為什麼無聊？（註：他的公司取名「無聊」The BORING Company）<br /><br />
-        馬：是啊。我也經常這麼問自己。<br /><br />
-        馬：我們打算在洛杉磯的地底下挖個大窟窿，這可是開創了新起點，希望建成三維網路隧道，來緩解交通擁堵。現在交通是件最令人難以忍受的事，影響到世界各地的人，也佔用了人很多的時間。這太可怕了。在洛杉磯尤其恐怖。（笑聲）<br /><br />
-        安：我想你帶來了未來工程的首映片。我能放嗎？<br /><br />
-        馬：當然可以了，這還是第一次，讓大家看看我們在說什麼。裡面有幾個很重要的關鍵在講三維網路隧道的建設。你得先整合隧道的入出口，無縫對接城市。所以，藉由電梯和位於電梯上的汽車滑托，就可以整合隧道的網路出入口，只佔用兩個停車位的空間。接著車子就上了汽車滑托。<br /><br />
-        馬：隧道是不限速的。我們設計車速能到每小時 200 公里。<br /><br />
-        安：多快？<br /><br />
-        馬：時速 200 公里，約 130 英里。從西木區到洛杉磯機場應該只要六分鐘，五、六分鐘的樣子。（掌聲）<br /><br />
-        </div>
+        <div className="sub">我是大綱</div>
       </div>
     </div>
   );

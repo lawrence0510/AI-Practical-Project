@@ -13,7 +13,8 @@ function Choose({ videoData }) {
 
     if (selectedLanguage) {
       // 傳遞語言和 URL 到下一頁
-      navigate("/app23", { state: { language: selectedLanguage, url: videoData.url } });
+      console.log("videoData at Choose: ", videoData)
+      navigate("/app23", { state: { videoData } } );
     } else {
       alert("請選擇一個語言！"); // 提示用戶選擇語言
     }

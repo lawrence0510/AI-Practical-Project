@@ -15,7 +15,8 @@ function App23() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { language, url } = location.state || {}; // 獲取選擇的目標語言
+  const { videoData } = location.state;
+  console.log("videoData at App23: ", videoData)
 
   const [subtitleText, setSubtitleText] = useState(""); // 儲存下載的字幕文字
   const [translatedText, setTranslatedText] = useState(""); // 儲存翻譯後的文字
@@ -26,16 +27,16 @@ function App23() {
       const response = await fetch("http://localhost:5003/youtube/download_youtube_audio", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }), // 替換為你的影片 ID
+        body: videoData.url
       });
       const data = await response.json();
 
       if (data.subtitles && data.subtitles.length > 0) {
-        const subtitleResponse = await fetch(data.subtitles[0].url); // 下載第一個字幕
+        const subtitleResponse = await fetch(data.subtitles[0].url);
         const subtitleText = await subtitleResponse.text();
-        setSubtitleText(subtitleText); // 保存字幕文字
-        setCheck1Visible(true); // 顯示第一步完成標誌
-        setStartSecondProgress(true); // 啟動第二步
+        setSubtitleText(subtitleText);
+        setCheck1Visible(true);
+        setStartSecondProgress(true);
       } else {
         alert("無法下載字幕！");
       }
@@ -55,9 +56,9 @@ function App23() {
       const data = await response.json();
 
       if (data.translated_text) {
-        setTranslatedText(data.translated_text); // 保存翻譯後的文字
-        setCheck2Visible(true); // 顯示第二步完成標誌
-        setStartThirdProgress(true); // 啟動第三步
+        setTranslatedText(data.translated_text);
+        setCheck2Visible(true);
+        setStartThirdProgress(true);
       } else {
         alert("翻譯字幕失敗！");
       }
@@ -77,8 +78,8 @@ function App23() {
       const data = await response.json();
 
       if (data.audio_path) {
-        setCheck3Visible(true); // 顯示第三步完成標誌
-        setStartFourthProgress(true); // 啟動第四步
+        setCheck3Visible(true);
+        setStartFourthProgress(true);
       } else {
         alert("生成語音失敗！");
       }
@@ -87,32 +88,32 @@ function App23() {
     }
   };
 
-  // 步驟 4：整理大綱（暫時空白）
+  // 步驟 4：整理大綱
   const summarizeOutline = async () => {
     try {
-      // 預留整理大綱的邏輯
-      setCheck4Visible(true); // 顯示第四步完成標誌
-      setTimeout(() => navigate("/app3"), 500); // 跳轉到下一頁
+      setCheck4Visible(true);
+      localStorage.setItem("app3State", JSON.stringify({ url, videoData }));
+      console.log("導航數據at app23：", { url, videoData });
+      setTimeout(() => navigate("/app3", { state: { videoData } })); // 傳遞 videoData
     } catch (error) {
       console.error("整理大綱失敗：", error);
     }
   };
 
   useEffect(() => {
-    // 啟動第一步
     downloadAudioAndSubtitles();
   }, []);
 
   useEffect(() => {
-    if (startSecondProgress) translateSubtitles(); // 啟動第二步
+    if (startSecondProgress) translateSubtitles();
   }, [startSecondProgress]);
 
   useEffect(() => {
-    if (startThirdProgress) generateAudio(); // 啟動第三步
+    if (startThirdProgress) generateAudio();
   }, [startThirdProgress]);
 
   useEffect(() => {
-    if (startFourthProgress) summarizeOutline(); // 啟動第四步
+    if (startFourthProgress) summarizeOutline();
   }, [startFourthProgress]);
 
   return (
@@ -165,8 +166,8 @@ function App23() {
                 onComplete={() => {
                   setCheck4Visible(true);
                   setTimeout(() => {
-                    navigate("/app3");
-                  }, 500);
+                    navigate("/app3", { state: { videoData } }); // 傳遞 videoData
+                  });
                 }}
               />
             )}

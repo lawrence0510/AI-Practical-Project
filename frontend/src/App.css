@@ -417,7 +417,7 @@ body {
 
 .play{
   position: relative;
-  left: 260px;
+  left: 20px;
   top: 3px;
   background-position: center; /* 圖片居中 */
   border: none; /* 移除邊框 */
@@ -432,7 +432,7 @@ body {
 
 .download{
   position: relative;
-  left: 280px;
+  left: 420px;
   top: 5px;
   background-position: center; /* 圖片居中 */
   border: none; /* 移除邊框 */
