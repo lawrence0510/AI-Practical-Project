@@ -120,7 +120,7 @@ body {
 .web {
   height: 200px;
   width: 800px;
-  margin-left: 900px;
+  margin-left: 500px;
   margin-top: 50px;
   font-size: 33px;
   font-weight: bold;
@@ -138,7 +138,7 @@ body {
   width: 400px;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  margin-left: 450px;
+  margin-left: 40px;
   margin-top: -200px;
   border-radius: 15px;
   position: absolute;
@@ -156,7 +156,7 @@ body {
   padding: 10px; /* 設定內邊距，上下左右都有 10px */
   height: 111px;
   font-size: 30px;
-  margin-top: 60px;
+  margin-top: 200px;
   color: black;
 }
 
@@ -192,13 +192,17 @@ body {
   height: 60px;
   width: 120px;
   cursor: pointer;
-  margin-right: 60px;
-  margin-left: 40px;
   font-size: 20px;
   font-weight: bold;
   border-radius: 40px;
-  margin-left: 900px;
-  margin-top: 200px;
+
+  /* 水平居中的設定 */
+  position: absolute; /* 使用絕對定位 */
+  left: 50%; /* 將按鈕的左邊定位到螢幕的 50% */
+  transform: translateX(-50%); /* 往左移動按鈕寬度的一半，實現真正居中 */
+
+  /* 垂直位置設定 */
+  margin-top: 200px; /* 距離頂部的距離 */
 }
 
 .next:hover {
@@ -439,4 +443,23 @@ body {
 .download img {
   width: 30px;
   height: 30px;
+}
+
+.lang-button {
+  margin: 5px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
+
+.lang-button:hover {
+  background-color: #e0e0e0;
+}
+
+.lang-button.selected {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
 }
