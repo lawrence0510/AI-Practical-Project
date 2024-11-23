@@ -9,13 +9,13 @@ function App2() {
   return (
     <div className="App2">
       <Step />
-      <p className="web">{videoData.name || "無影片名稱"}</p>{" "}
+      <p className="web">{videoData?.name || "無影片名稱"}</p>{" "}
       {/* 顯示影片名稱 */}
-      {videoData.image && (
+      {videoData?.image && (
         <img src={videoData.image} alt={videoData.name} className="VideoPic" />
       )}{" "}
       {/* 顯示影片圖片 */}
-      <Choose />
+      <Choose videoData={videoData} /> {/* 傳遞 videoData 給 Choose */}
     </div>
   );
 }

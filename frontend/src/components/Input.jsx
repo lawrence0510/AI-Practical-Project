@@ -39,7 +39,7 @@ function Input() {
       const video = await fetchVideoInfoFromAPI(inputValue);
 
       if (video) {
-        setVideoData(video); // 儲存取得的影片數據
+        setVideoData({ ...video, url: inputValue }); // 合併影片數據與 URL
       }
 
       setTimeout(() => {

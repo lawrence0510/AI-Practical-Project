@@ -50,8 +50,8 @@ from yt_dlp import YoutubeDL
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-@youtube_ns.route('/download_youtube_video')
-class DownloadYoutubeVideo(Resource):
+@youtube_ns.route('/download_youtube_audio')
+class DownloadYoutubeAudio(Resource):
     @youtube_ns.expect(download_parser)
     def post(self):
         args = download_parser.parse_args()
@@ -63,23 +63,24 @@ class DownloadYoutubeVideo(Resource):
 
             # 設定 yt-dlp 的參數
             ydl_opts = {
-                'outtmpl': os.path.join(UPLOAD_FOLDER, '%(title)s.%(ext)s'),  # 儲存影片的格式
-                'format': 'bestvideo+bestaudio/best',  # 下載最佳畫質與音質
+                'outtmpl': os.path.join(UPLOAD_FOLDER, '%(title)s.%(ext)s'),  # 儲存音訊的格式
+                'format': 'bestaudio/best',  # 只下載最佳音質的音訊
                 'writesubtitles': True,  # 啟用字幕下載
                 'subtitleslangs': ['all'],  # 下載所有可用語言的字幕
                 'postprocessors': [
                     {
-                        'key': 'FFmpegVideoConvertor',
-                        'preferedformat': 'mp4'  # 確保輸出為 mp4
+                        'key': 'FFmpegExtractAudio',  # 確保只輸出音訊
+                        'preferredcodec': 'mp3',  # 音訊格式為 mp3
+                        'preferredquality': '192',  # 音質選擇 192 kbps
                     }
                 ],
-                'skip_download': False,  # 確保下載影片
+                'skip_download': False,  # 確保下載音訊
             }
 
-            # 使用 yt_dlp 提取影片資訊並下載
+            # 使用 yt_dlp 提取影片資訊並下載音訊
             with YoutubeDL(ydl_opts) as ydl:
                 info_dict = ydl.extract_info(url, download=True)
-                video_path = os.path.join(UPLOAD_FOLDER, f"{info_dict['title']}.mp4")
+                audio_path = os.path.join(UPLOAD_FOLDER, f"{info_dict['title']}.mp3")
 
                 # 收集字幕資訊
                 subtitles = []
@@ -93,7 +94,7 @@ class DownloadYoutubeVideo(Resource):
                                 })
 
                 return {
-                    "video_path": video_path,
+                    "audio_path": audio_path,
                     "subtitles": subtitles
                 }
 

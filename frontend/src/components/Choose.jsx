@@ -1,19 +1,25 @@
 import { useNavigate } from "react-router-dom"; // 引入 useNavigate 進行頁面導航
 import React, { useState } from "react";
 
-function Choose() {
+function Choose({ videoData }) {
   const navigate = useNavigate();
   const [selectedLanguage, setSelectedLanguage] = useState(null); // 保存選擇的語言
 
   const handleNext = () => {
+    if (!videoData) {
+      console.error("videoData 未傳遞，請檢查導航流程");
+      return;
+    }
+
     if (selectedLanguage) {
-      navigate("/app23", { state: { language: selectedLanguage } }); // 跳轉到下一頁，並傳遞語言
+      // 傳遞語言和 URL 到下一頁
+      navigate("/app23", { state: { language: selectedLanguage, url: videoData.url } });
     } else {
       alert("請選擇一個語言！"); // 提示用戶選擇語言
     }
   };
 
-  // 同時支援翻譯和 TTS 的語言選項
+  // 支援翻譯和 TTS 的語言選項
   const languages = [
     { value: "af", label: "南非荷蘭語 (Afrikaans)" },
     { value: "sq", label: "阿爾巴尼亞語 (Albanian)" },
