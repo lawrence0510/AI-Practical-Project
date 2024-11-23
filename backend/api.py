@@ -58,33 +58,44 @@ class DownloadYoutubeVideo(Resource):
         url = args['url']
 
         try:
+            # 確保下載資料夾存在
+            os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
             # 設定 yt-dlp 的參數
             ydl_opts = {
-                'outtmpl': f'{UPLOAD_FOLDER}/%(title)s.%(ext)s',  # 儲存影片的格式
+                'outtmpl': os.path.join(UPLOAD_FOLDER, '%(title)s.%(ext)s'),  # 儲存影片的格式
                 'format': 'bestvideo+bestaudio/best',  # 下載最佳畫質與音質
-                'writesubtitles': True,  # 嘗試下載字幕
-                'subtitleslangs': ['en'],  # 指定字幕語言
+                'writesubtitles': True,  # 啟用字幕下載
+                'subtitleslangs': ['all'],  # 下載所有可用語言的字幕
                 'postprocessors': [
                     {
                         'key': 'FFmpegVideoConvertor',
                         'preferedformat': 'mp4'  # 確保輸出為 mp4
                     }
-                ]
+                ],
+                'skip_download': False,  # 確保下載影片
             }
 
+            # 使用 yt_dlp 提取影片資訊並下載
             with YoutubeDL(ydl_opts) as ydl:
-                info_dict = ydl.extract_info(url, download=True)  # 下載影片
+                info_dict = ydl.extract_info(url, download=True)
                 video_path = os.path.join(UPLOAD_FOLDER, f"{info_dict['title']}.mp4")
-                
-                # 檢查是否有字幕文件
-                subtitle_path = None
-                if 'requested_subtitles' in info_dict and info_dict['requested_subtitles']:
-                    subtitle_lang = 'en'
-                    if subtitle_lang in info_dict['requested_subtitles']:
-                        subtitle_filename = info_dict['requested_subtitles'][subtitle_lang]['filename']
-                        subtitle_path = os.path.join(UPLOAD_FOLDER, subtitle_filename)
 
-                return {"video_path": video_path, "subtitle_path": subtitle_path}
+                # 收集字幕資訊
+                subtitles = []
+                if 'subtitles' in info_dict and info_dict['subtitles']:
+                    for lang, subtitle_list in info_dict['subtitles'].items():
+                        if subtitle_list:
+                            for subtitle in subtitle_list:
+                                subtitles.append({
+                                    "lang": lang,
+                                    "url": subtitle['url']  # 保存字幕下載 URL
+                                })
+
+                return {
+                    "video_path": video_path,
+                    "subtitles": subtitles
+                }
 
         except Exception as e:
             return {"error": str(e)}, 500
