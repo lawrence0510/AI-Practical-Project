@@ -8,7 +8,8 @@ function App23() {
   const { videoData, language } = location.state;
 
   const [subtitleText, setSubtitleText] = useState(""); // 儲存下載的字幕文字
-  const [translatedText, setTranslatedText] = useState(""); // 儲存翻譯後的文字
+  const [translatedText, setTranslatedText] = useState(""); // 儲存翻譯後的完整 JSON
+  const [tobetranslated, setTobetranslated] = useState("a"); // 用 useState 儲存翻譯後的文本
 
   const [step, setStep] = useState(1); // 控制目前步驟
 
@@ -64,6 +65,8 @@ function App23() {
 
       console.log("translatedTexts", translatedTexts);
 
+      setTobetranslated(translatedTexts); // 更新翻譯後的文本狀態
+
       let translatedIndex = 0;
       subtitleJson.events.forEach(event => {
         if (event.segs && event.segs.length > 0) {
@@ -76,7 +79,8 @@ function App23() {
         }
       });
 
-      setTranslatedText(JSON.stringify(subtitleJson, null, 2));
+      const translatedJson = JSON.stringify(subtitleJson, null, 2);
+      setTranslatedText(translatedJson); // 儲存完整翻譯後的 JSON
       setStep(3); // 完成步驟 2，進入步驟 3
     } catch (error) {
       console.error("翻譯字幕失敗：", error);
@@ -86,10 +90,15 @@ function App23() {
   // 步驟 3：生成語音
   const generateAudio = async () => {
     try {
+      if (!tobetranslated || tobetranslated.length === 0) {
+        console.error("無法生成音檔，因為翻譯結果為空！");
+        return;
+      }
+
       const response = await fetch("http://localhost:5003/text_audio/text_to_speech", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: translatedText, lang: language }),
+        body: JSON.stringify({ text: tobetranslated.join("\n"), lang: language }), // 使用狀態變數 tobetranslated
       });
       const data = await response.json();
 
