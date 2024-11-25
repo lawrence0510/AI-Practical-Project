@@ -5,7 +5,7 @@ import Step from "./components/step";
 function App3() {
   const location = useLocation();
   const savedState = JSON.parse(localStorage.getItem("app3State")) || {};
-  const { videoData } = location.state || savedState || {};
+  const { videoData, summary } = location.state || savedState || {}; // 提取 summary
 
   console.log("App3 的狀態：", location.state);
 
@@ -54,7 +54,11 @@ function App3() {
             <img src="/assets/download.png" alt="按鈕圖片" />
           </button>
         </div>
-        <div className="sub">我是大綱</div>
+        <div className="sub">
+          {summary.split("\n").map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+        </div>
       </div>
     </div>
   );

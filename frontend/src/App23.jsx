@@ -116,13 +116,27 @@ function App23() {
   // 步驟 4：整理大綱
   const summarizeOutline = async () => {
     try {
-      localStorage.setItem("app3State", JSON.stringify({ url: videoData.url, videoData }));
-      console.log("導航數據 at app23：", { url: videoData.url, videoData });
-      setTimeout(() => navigate("/app3", { state: { videoData } })); // 傳遞 videoData
+      if (!tobetranslated || tobetranslated.length === 0) {
+        console.error("無法整理大綱，因為翻譯結果為空！");
+        return;
+      }
+  
+      const response = await fetch("http://localhost:5003/openai/summarize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: tobetranslated.join("\n") }), // 傳遞文本作為請求內容
+      });
+  
+      const data = await response.json();
+      
+      console.log(data)
+
+      localStorage.setItem("app3State", JSON.stringify({ summary: data, videoData }));
+      navigate("/app3", { state: { summary: data, videoData } });
     } catch (error) {
       console.error("整理大綱失敗：", error);
     }
-  };
+  };  
 
   useEffect(() => {
     if (step === 1) {
