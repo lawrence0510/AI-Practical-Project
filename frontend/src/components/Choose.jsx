@@ -10,11 +10,12 @@ function Choose({ videoData }) {
       console.error("videoData 未傳遞，請檢查導航流程");
       return;
     }
-
+  
     if (selectedLanguage) {
-      // 傳遞語言和 URL 到下一頁
-      console.log("videoData at Choose: ", videoData)
-      navigate("/app23", { state: { videoData } } );
+      // 傳遞語言和 videoData 到下一頁
+      console.log("選擇的語言: ", selectedLanguage);
+      console.log("videoData at Choose: ", videoData);
+      navigate("/app23", { state: { videoData, language: selectedLanguage } }); 
     } else {
       alert("請選擇一個語言！"); // 提示用戶選擇語言
     }

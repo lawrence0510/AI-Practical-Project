@@ -178,7 +178,13 @@ class Translate(Resource):
         target_language = args['target_language']
 
         try:
-            translated_text = GoogleTranslator(source='auto', target=target_language).translate(text)
+            # 分行翻譯
+            lines = text.split("\n")
+            translated_lines = [
+                GoogleTranslator(source='auto', target=target_language).translate(line)
+                for line in lines if line.strip()
+            ]
+            translated_text = "\n".join(translated_lines)
             return {"translated_text": translated_text}
         except Exception as e:
             return {"error": str(e)}, 500
