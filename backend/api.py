@@ -1,17 +1,17 @@
 #openai整理大綱input:srt, output:String(大綱)
+from dotenv import load_dotenv
 from flask import Flask, request
 from flask_restx import Api, Resource, Namespace, reqparse
 from flask_cors import CORS
 import os
-from pytube import YouTube
+from openai import OpenAI
 import moviepy.editor as mp
-from googletrans import Translator
 from gtts import gTTS
 import speech_recognition as sr
 
 app = Flask(__name__)
 CORS(app)
-
+load_dotenv()
 api = Api(app, title="人工智慧實務專題API", description="組員：吳堃豪、許馨文")
 
 UPLOAD_FOLDER = "uploads"
@@ -39,10 +39,14 @@ tts_parser.add_argument('lang', type=str, required=True, help="Language code is 
 speech_parser = reqparse.RequestParser()
 speech_parser.add_argument('audio', type=str, required=True, help="Audio file path is required")
 
+summarize_parser = reqparse.RequestParser()
+summarize_parser.add_argument('text', type=str, required=True, help="Summarize Text is required")
+
 # Namespaces
 youtube_ns = Namespace('youtube', description="YouTube相關功能")
 video_audio_ns = Namespace('video_audio', description="影片與音訊處理功能")
 text_audio_ns = Namespace('text_audio', description="文字與語音處理功能")
+openAI_ns = Namespace('openAI', description="OpenAI相關功能")
 
 # YouTube Namespace
 from yt_dlp import YoutubeDL
@@ -233,10 +237,47 @@ class SpeechToText(Resource):
         except Exception as e:
             return {"error": str(e)}, 500
 
+@openAI_ns.route('/summarize')
+class Summarize(Resource):
+    @openAI_ns.expect(summarize_parser)
+    def post(self):
+        '''取得影片大綱'''
+        args = summarize_parser.parse_args()
+        article = args['text']
+        
+        try:
+            # 組裝 Prompt
+            prompt_message = (
+                "以下是影片的字幕，請根據字幕內容，整理成清晰、條理分明、且語言符合字幕來源的大綱筆記：\n\n"
+                f"{article}"
+            )
+
+            # 發送 OpenAI 請求
+            client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "你是專門整理大綱的助手，請將文字整理成簡單易讀的大綱格式。"},
+                    {"role": "user", "content": prompt_message}
+                ],
+            )
+            response_str = str(response)
+            content_start = response_str.find("content='") + len("content='")
+            content_end = response_str.find("',", content_start)
+            content = response_str[content_start:content_end]
+            content_cleaned = content.replace("\\n", "\n").replace("\\", "").strip()
+            
+            print(content_cleaned)
+            return content_cleaned
+
+        except Exception as e:
+            return {"error": str(e)}, 500
+
 # 加入 namespaces 到主 API
 api.add_namespace(youtube_ns, path='/youtube')
 api.add_namespace(video_audio_ns, path='/video_audio')
 api.add_namespace(text_audio_ns, path='/text_audio')
+api.add_namespace(openAI_ns, path='/openai')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5003)
