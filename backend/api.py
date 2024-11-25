@@ -243,26 +243,30 @@ class Summarize(Resource):
     def post(self):
         '''取得影片大綱'''
         args = summarize_parser.parse_args()
-        article = args['text']
+        subtitle = args['text']
         
         try:
             # 組裝 Prompt
             prompt_message = (
-                "以下是影片的字幕，請根據字幕內容，整理成清晰、條理分明、且語言符合字幕來源的大綱筆記：\n\n"
-                f"{article}"
+                "以下是一段影片字幕，請首先判斷這段字幕所使用的語言，"
+                "然後使用相同語言將字幕內容整理成清晰、條理分明的影片大綱：\n\n"
+                f"{subtitle}\n\n"
+                "請以以下格式輸出：\n"
+                "字幕語言：<判斷的語言>\n"
+                "影片大綱：<以判斷語言整理的大綱>"
             )
 
             # 發送 OpenAI 請求
             client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
             response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "你是專門整理大綱的助手，請將文字整理成簡單易讀的大綱格式。"},
                     {"role": "user", "content": prompt_message}
                 ],
             )
             response_str = str(response)
-            content_start = response_str.find("content='") + len("content='")
+            content_start = response_str.find("影片大綱：") + len("影片大綱：")
             content_end = response_str.find("',", content_start)
             content = response_str[content_start:content_end]
             content_cleaned = content.replace("\\n", "\n").replace("\\", "").strip()
