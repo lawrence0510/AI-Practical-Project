@@ -25,6 +25,8 @@ function App3() {
 
   const embedUrl = getEmbedUrl(videoData?.url); // 轉換 URL
 
+  const audioPath = "/Users/kunhaowu/uploads/output_audio.mp3"; // 絕對路徑
+
   if (!embedUrl) {
     return (
       <div>
@@ -58,6 +60,14 @@ function App3() {
           {summary.split("\n").map((line, index) => (
             <p key={index}>{line}</p>
           ))}
+        </div>
+        {/* 新增播放語音區域 */}
+        <div className="audio-section">
+          <p>語音播放：</p>
+          <audio controls>
+            <source src={`file://${audioPath}`} type="audio/mpeg" />
+            您的瀏覽器不支援音訊播放。
+          </audio>
         </div>
       </div>
     </div>

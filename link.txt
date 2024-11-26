@@ -1,1 +1,7 @@
 https://youtu.be/95N_spFNEkY?si=aKWT9SVQjFVSWZfx
+
+
+Todo List
+1. 同步音訊長度
+2. 動態字幕
+3. 同步播放youtube（同步調整暫停與播放）

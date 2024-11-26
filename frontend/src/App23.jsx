@@ -153,7 +153,7 @@ function App23() {
   return (
     <div className="App23">
       <Step />
-      <div className="Wait">請稍後，請勿操作...</div>
+      <div className="Wait">請稍候，請勿操作...</div>
       <div className="ing">
         <div className="text">
           <div>➤ 步驟 1：下載字幕 {step > 1 && "✔"}</div>

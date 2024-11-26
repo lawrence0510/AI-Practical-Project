@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <Step />
-      <div className="Topic">～　新一代 AI 翻譯影片功能　～</div>
+      <div className="Topic">智慧教育翻譯平台</div>
       <Input />
       <div className="Guess">猜你喜歡...</div>
     </div>
