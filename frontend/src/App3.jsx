@@ -25,7 +25,19 @@ function App3() {
 
   const embedUrl = getEmbedUrl(videoData?.url); // 轉換 URL
 
-  const audioPath = "/Users/kunhaowu/uploads/output_audio.mp3"; // 絕對路徑
+  const audioPath = "/assets/output_audio.mp3"; // 語音檔案相對路徑
+  const subtitlePath = "/assets/Take a Seat in the Harvard MBA Case Classroom.zh-TW.vtt"; // 字幕檔案相對路徑
+
+  // 將 summary 轉為 .txt 文件並觸發下載
+  const downloadSummaryAsTxt = () => {
+    const element = document.createElement("a");
+    const file = new Blob([summary], { type: "text/plain" }); // 將 summary 轉為文字 Blob
+    element.href = URL.createObjectURL(file);
+    element.download = "summary.txt"; // 指定下載的文件名稱
+    document.body.appendChild(element); // 將元素添加到 DOM
+    element.click(); // 模擬點擊以觸發下載
+    document.body.removeChild(element); // 清理 DOM
+  };
 
   if (!embedUrl) {
     return (
@@ -38,12 +50,12 @@ function App3() {
   return (
     <div className="App3">
       <Step />
-      <iframe 
+      <iframe
         className="Video"
         src={embedUrl} // 使用嵌入格式的 URL
-        title="YouTube video player" 
-        frameBorder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       ></iframe>
       <p className="page3_name">{videoData?.name || "無影片標題"}</p> {/* 使用 videoData.name */}
@@ -52,7 +64,7 @@ function App3() {
           <button className="play">
             <img src="/assets/play.png" alt="按鈕圖片" />
           </button>
-          <button className="download">
+          <button className="download" onClick={downloadSummaryAsTxt}>
             <img src="/assets/download.png" alt="按鈕圖片" />
           </button>
         </div>
@@ -65,7 +77,7 @@ function App3() {
         <div className="audio-section">
           <p>語音播放：</p>
           <audio controls>
-            <source src={`file://${audioPath}`} type="audio/mpeg" />
+            <source src={audioPath} type="audio/mpeg" />
             您的瀏覽器不支援音訊播放。
           </audio>
         </div>
