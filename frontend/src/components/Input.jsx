@@ -44,7 +44,7 @@ function Input() {
 
       setTimeout(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 300);
     }
   };
 

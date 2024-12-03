@@ -463,3 +463,27 @@ body {
   color: #fff;
   border-color: #007bff;
 }
+
+.Guess.Video {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 垂直置中 */
+  background-color: #f0f0f0; /* 可選背景色 */
+  
+}
+
+.video-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px; /* 影片間的間距 */
+  margin-top: 40px;
+}
+
+.video {
+  width: 480px; /* 調整影片寬度 */
+  height: 270px; /* 調整影片高度 */
+  border: 1px solid #ddd; /* 可選的邊框樣式 */
+  border-radius: 8px; /* 可選的圓角樣式 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 可選的陰影效果 */
+}

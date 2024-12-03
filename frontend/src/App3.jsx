@@ -1,48 +1,58 @@
 import React from "react";
-import { useLocation } from "react-router-dom"; // 使用 useLocation 提取狀態
+import { useLocation } from "react-router-dom";
 import Step from "./components/step";
 
 function App3() {
   const location = useLocation();
   const savedState = JSON.parse(localStorage.getItem("app3State")) || {};
-  const { videoData, summary } = location.state || savedState || {}; // 提取 summary
+  const defaultState = {
+    videoData: {
+      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      name: "預設影片標題",
+    },
+    summary: "這是預設的摘要內容。",
+  };
+  const { videoData, summary } = location.state || savedState || defaultState;
 
-  console.log("App3 的狀態：", location.state);
+  React.useEffect(() => {
+    if (!savedState.videoData || !savedState.videoData.url) {
+      localStorage.setItem("app3State", JSON.stringify(defaultState));
+    }
+  }, []);
 
-  // 將普通 YouTube URL 轉換為嵌入 URL
   const getEmbedUrl = (videoUrl) => {
-    if (!videoUrl) return ""; // 如果 URL 不存在，返回空字串
-    if (videoUrl.includes("embed")) return videoUrl; // 如果已是嵌入格式，直接返回
+    if (!videoUrl) return "";
     try {
       const url = new URL(videoUrl);
-      const videoId = url.searchParams.get("v"); // 提取 video_id
-      return `https://www.youtube.com/embed/${videoId}`;
+      if (url.hostname.includes("youtube.com") || url.hostname.includes("youtu.be")) {
+        const videoId = url.searchParams.get("v") || url.pathname.split("/")[1];
+        return `https://www.youtube.com/embed/${videoId}`;
+      }
+      console.warn("提供的 URL 不是有效的 YouTube 連結:", videoUrl);
+      return "";
     } catch (error) {
       console.error("無法解析 URL:", error);
-      return ""; // 如果解析失敗，返回空字串
+      return "";
     }
   };
 
-  const embedUrl = getEmbedUrl(videoData?.url); // 轉換 URL
+  const embedUrl = getEmbedUrl(videoData?.url);
 
-  const audioPath = "/assets/output_audio.mp3"; // 語音檔案相對路徑
-  const subtitlePath = "/assets/Take a Seat in the Harvard MBA Case Classroom.zh-TW.vtt"; // 字幕檔案相對路徑
-
-  // 將 summary 轉為 .txt 文件並觸發下載
   const downloadSummaryAsTxt = () => {
     const element = document.createElement("a");
-    const file = new Blob([summary], { type: "text/plain" }); // 將 summary 轉為文字 Blob
+    const file = new Blob([summary], { type: "text/plain" });
     element.href = URL.createObjectURL(file);
-    element.download = "summary.txt"; // 指定下載的文件名稱
-    document.body.appendChild(element); // 將元素添加到 DOM
-    element.click(); // 模擬點擊以觸發下載
-    document.body.removeChild(element); // 清理 DOM
+    element.download = "summary.txt";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   };
 
   if (!embedUrl) {
     return (
       <div>
-        <p>無法嵌入視頻，請檢查影片 URL。</p>
+        <p>無法嵌入影片，請提供有效的影片 URL 或重新整理頁面。</p>
+        <button onClick={() => window.location.reload()}>重新整理</button>
       </div>
     );
   }
@@ -52,13 +62,13 @@ function App3() {
       <Step />
       <iframe
         className="Video"
-        src={embedUrl} // 使用嵌入格式的 URL
+        src={embedUrl}
         title="YouTube video player"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       ></iframe>
-      <p className="page3_name">{videoData?.name || "無影片標題"}</p> {/* 使用 videoData.name */}
+      <p className="page3_name">{videoData?.name || "無影片標題"}</p>
       <div className="sb">
         <div className="top">
           <button className="play">
@@ -73,11 +83,10 @@ function App3() {
             <p key={index}>{line}</p>
           ))}
         </div>
-        {/* 新增播放語音區域 */}
         <div className="audio-section">
           <p>語音播放：</p>
           <audio controls>
-            <source src={audioPath} type="audio/mpeg" />
+            <source src="/assets/output_audio.mp3" type="audio/mpeg" />
             您的瀏覽器不支援音訊播放。
           </audio>
         </div>
